@@ -1,0 +1,11 @@
+# Ignore node modules, check README for developer details
+node_modules
+
+# macOS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
