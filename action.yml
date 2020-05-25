@@ -1,0 +1,48 @@
+name: 'Thumbnails generator'
+description: 'Generates thumbnails from existing repository image folder'
+inputs:
+  source:
+    description: 'Source images folder'
+    required: true
+    default: 'images'
+  output:
+    description: 'Thumbnails output folder'
+    required: true
+    default: 'thumbnails'
+  sizes:
+    description: 'Thumbnail sizes'
+    required: true
+    default: 480
+  subfolder:
+    description: 'Thumbnails subfolder pattern'
+    required: false
+    default: '%D'
+  filename:
+    description: 'Thumbnail filename pattern'
+    required: false
+    default: '%F'
+  extensions:
+    description: 'Image extensions filter'
+    required: false
+    default: 'jpg, jpeg, png, webp, gif, tiff'
+  fit:
+    description: 'How the image should be resized to dimensions'
+    required: false
+    default: 'cover'
+  position:
+    description: 'Position, gravity or strategy for fit: cover or contain'
+    required: false
+  enlarge:
+    description: 'Enlarge smaller images to thumbnail dimensions'
+    required: false
+    default: true
+  overwrite:
+    description: 'Overwrite existing images'
+    required: false
+    default: false
+outputs:
+  thumbnails:
+    description: 'Processed thumbnails folder'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
