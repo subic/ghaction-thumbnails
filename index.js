@@ -37,7 +37,7 @@ async function generateThumbnails(
   const sizes = validateSizes(_sizes, _fit, _position, _enlarge);
   const tasks = []; // Output array.
 
-  // Create image resize tasks for each requited thumbanil size.
+  // Create image resize tasks for each requited thumbnail size.
   await Promise.all(sizes.map(async (options) => {
     // Helper scripts
     const filename = (file) => expand(_filename, options, file);

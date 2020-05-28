@@ -8,8 +8,8 @@ const { lstat, opendir, mkdir } = require('fs').promises;
  * Checks if filename matches extension.
  * @private
  *
- * @param {string} file Filename to compare with, case insensitve.
- * @param {string} extension Extension, dot prefix optional, case insensitve.
+ * @param {string} file Filename to compare with, case insensitive.
+ * @param {string} extension Extension, dot prefix optional, case insensitive.
  *
  * @returns {boolean} Returns true if filename has a matching extension.
  */
@@ -54,7 +54,7 @@ async function getFiles(folder, extensions = []) {
   for await (const dirent of dir) {
     if (!dirent.isDirectory()) {
       const filename = dirent.name;
-      // If passsed any extensions return only matching filenames.
+      // If passed any extensions return only matching filenames.
       if (!extensions.length || extensions.some((extension) => hasExtension(filename, extension))) {
         files.push(filename);
       }
@@ -64,7 +64,7 @@ async function getFiles(folder, extensions = []) {
 }
 
 /**
- * Recuresively creates a folder.
+ * Recursively creates a folder.
  * @async
  *
  * @param {string} folder Folder path.

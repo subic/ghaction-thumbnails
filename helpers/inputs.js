@@ -23,7 +23,7 @@ const isValidFit = (fit) => VALID_FITS.includes(fit);
  * Checks if position matches valid position values constant and fit is correct.
  * @private
  *
- * @param {string} positoon Fit string to compare.
+ * @param {string} position Fit string to compare.
  * @param {string} fit Fit option to compare.
  *
  * @returns {boolean} Returns true if any position matches for valid fit.
@@ -59,9 +59,9 @@ function validateOptions(fit, position, enlarge = true) {
   const validOptions = {};
   // Confirm fit value is valid.
   if (isValidFit(fit)) validOptions.fit = fit;
-  // Confirm position value is falid for fit.
+  // Confirm position value is valid for fit.
   if (isValidPosition(position, validOptions.fit)) validOptions.position = position;
-  // Prevent enlargment if requested.
+  // Prevent enlargement if requested.
   if (!enlarge || enlarge === 'false') validOptions.withoutEnlargement = true;
   return validOptions;
 }
@@ -169,7 +169,7 @@ async function validateFolder(path) {
 }
 
 /**
- * Will expand variable placholders with provided values.
+ * Will expand variable placeholders with provided values.
  *
  * @param {string} pattern A string pattern containing % variable placeholders.
  * @param {{width?: number, height?: number}} dimensions Width and height object.
