@@ -1,4 +1,4 @@
-# Thumbnail Generator GitHub Action
+# Thumbnails Generator GitHub Action
 ### Automatically generate image thumbnails when images are added to the repository.
 
 * [Usage](#usage)
@@ -175,7 +175,7 @@ The code is (somewhat) commented and build as to allow easy automatization for a
 - [GitHub Actions Toolkit](https://github.com/actions/toolkit) -  The GitHub ToolKit for developing GitHub Actions.
 - [sharp](https://github.com/lovell/sharp) - High performance Node.js image processing.
 
-In addition, the following `devDependencies` are used for linting only: `eslint`, `eslint-config-airbnb-base` and `eslint-plugin-import`.
+In addition, the following `devDependencies` are used for linting only: `eslint`, `eslint-config-airbnb-base` and `eslint-plugin-import`.
 
 ### Alternatives
 
