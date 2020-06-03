@@ -1,6 +1,19 @@
 # Thumbnail Generator GitHub Action
-
 ### Automatically generate image thumbnails when images are added to the repository.
+
+* [Usage](#usage)
+    * [Inputs](#inputs)
+    * [Outputs](#outputs)
+    * [Example usage](#example-usage)
+    * [Notes](#notes)
+* [Development](#development)
+    * [Repo structure](#repo-structure)
+    * [Image processing task modifications](#image-processing-task-modifications)
+    * [Scripts](#scripts)
+    * [Dependencies](#dependencies)
+    * [Alternatives](#alternatives)
+    * [Contributions](#contributions)
+    * [License](#license)
 
 ## Usage
 
@@ -11,7 +24,7 @@ Inside your `.github/workflows/workflow.yml` file:
 ```yaml
 steps:
 - uses: actions/checkout@master
-- uses: subic/ghaction-thumbnails@v1 # tag number optional, breaking changes not expected
+- uses: subic/ghaction-thumbnails@master
   with: # Required arguments:
     source: 'images' # Input images folder, required both as an argument and as an existing directory path in repository which is also the reason for the previous checkout step (default: 'images').
     output: 'thumbnails' # Output thumbnails container folder, can be same as input or base directory, if the directory doesn't exist it will be created recursively (default: 'thumbnails').
@@ -57,7 +70,7 @@ Input files images extensions filter (string or comma-delimited string of string
 
 #### `fit`
 [Sharp input](https://sharp.pixelplumbing.com/api-resize) parameter (string) for how the image should be resized to fit both provided thumbnail dimensions. Possible values:
-  - **`'cover'`**(default) Preserving aspect ratio, ensure the image covers both provided dimensions by cropping/clipping to fit.
+  - **`'cover'`** (default): Preserving aspect ratio, ensure the image covers both provided dimensions by cropping/clipping to fit.
   - **`'contain'`**: Preserving aspect ratio, contain within both provided dimensions using "letter-boxing" where necessary.
   - **`'fill'`**: Ignore the aspect ratio of the input and stretch to both provided dimensions.
   - **`'inside'`**: Preserving aspect ratio, resize the image to be as large as possible while ensuring its dimensions are less than or equal to both those specified.
@@ -65,21 +78,23 @@ Input files images extensions filter (string or comma-delimited string of string
 >**Note**: Both width and height action sizes options have to be set for this argument to apply.
 
 #### `position`
-[Sharp input](https://sharp.pixelplumbing.com/api-resize) parameter (string) for position, gravity or strategy when using a [`fit`](#fit) of `cover` or `contain`. Options are: `top`, `right top`, `right`, `right bottom`, `bottom`, `left bottom`, `left`, `left top`, `north`, `northeast`, `east`, `southeast`, `south`, `southwest`, `west`, `northwest`, `center`, `centre` (default), `entropy` ([`fit`](#fit): `'cover'` only) and `attention` ([`fit`](#fit): `'cover'` only)
+[Sharp input](https://sharp.pixelplumbing.com/api-resize) parameter (string) for position, gravity or strategy when using a [`fit`](#fit) of `cover` or `contain`. Options are: `top`, `right top`, `right`, `right bottom`, `bottom`, `left bottom`, `left`, `left top`, `north`, `northeast`, `east`, `southeast`, `south`, `southwest`, `west`, `northwest`, `center`, `centre` (default), `entropy` ([`fit`](#fit): `'cover'` only) and `attention` ([`fit`](#fit): `'cover'` only)
 
 #### `enlarge`
 A (string) parameter wether to enlarge generated thumbnails if the source image width or height are less than the specified dimensions. Possible values: `'true'` (default) or `'false'`.
 
 #### `overwrite`
-A (string) parameter wether to overwrite any existing files in the [`output folder`](#output). Possible values: `'true'` or `'false'` (default).
+A (string) parameter wether to overwrite any existing files in the [`output` folder](#output). Possible values: `'true'` or `'false'` (default).
 
 ### Outputs
 
-If there are no breaking errors, the action only sets a workflow environment variable: `thumbnails` which is the repository relative path string for the container [`output images folder`](#output). It can be used in any further image actions or passed to a commit repository action.
+If there are no breaking errors, the action only sets a workflow environment variable: `thumbnails` which is the repository relative path string for the container [`output` images folder](#output). It can be used in any further image actions or passed to a commit repository action.
 
 ### Example usage
 
 #### Example `workflow.yml`
+
+Example commented workflow file with all optional arguments and example commit step using the output environment variable. It will trigger on any new or modified files added to the `/images`repository folder (set under `paths:`) and
 
 ```yaml
 name: Generate thumbnails
@@ -88,23 +103,29 @@ on:
     branches:
       - master
     paths:
-      - 'images/*'
+      - 'images/*' # Only run on this path changes
 jobs:
   generate_thumbnails:
     name: Generate thumbnails
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 10 # Should be enough for all runs, GH default is 360 which is unreasonable...
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Checkout repository # Check out the repo to access the input image folder.
+        uses: actions/checkout@master
       - name: Process Images
-        uses: subic/ghaction-thumbnails@v1
-        with:
-          source: 'images'
-          output: 'thumbnails'
-          sizes: 480
-          subfolder: '%W'
-      - name: Commit thumbnail folder
+        uses: subic/ghaction-thumbnails@v1 # Tag number optional, breaking changes not expected.
+        with: # Arguments:
+          source: 'images' # REQUIRED
+          output: 'thumbnails' # REQUIRED
+          sizes: 480 # REQUIRED
+          extensions: 'jpg, jpeg, png, webp, gif, tiff'
+          subfolder: '%D'
+          filename: '%F'
+          fit: 'cover'
+          position: 'centre'
+          enlarge: 'true'
+          overwrite: 'false'
+      - name: Commit thumbnail folder # This step will commit generated files, remove if not used as a single purpose workflow. Will exit gracefully if no changes are found.
         run: |
           echo "Committing folder ${{env.thumbnails}}"
           git config --local user.name "${{github.actor}}"
@@ -116,22 +137,55 @@ jobs:
 
 #### Example repository
 
+An example repository with the workflow file usage example is [available here](https://github.com/subic/ghaction-thumbnails-example). You can fork it and after pushing an image to the `images` folder on GitHub, example thumbnails will be generated in the `output` folder. A comparison `test` folder is also available which will run the action and its[alternatives](#alternatives) for comparison.
+
 ### Notes
+
+The action was developed as a way to prevent excess thumbnail generation when using a build tool for a static website. When using "git as a cms" with tools such as [netlifycms](https://www.netlifycms.org/) or GitHub pages, any files generated as part of the build process are not committed to the source repository and therefore needlessly regenerated on each full build.
 
 ## Development
 
+The code is (somewhat) commented and build as to allow easy automatization for any thumbnail generation need. The actual image processing task is hot-pluggable to allow replacement of sharp output or even sharp itself.
+
 ### Repo structure
+
+    .
+    ├── dist                    # Compiled main script code with modules (for GH linux)
+    ├── helpers                 # Helper functions folder
+    │   ├── folders.js          # Node files system helper scripts
+    │   ├── images.js           # Image processing script
+    │   └── inputs.js           # Input arguments validation helper scripts
+    ├── .gitignore
+    ├── action.yml              # Main action file
+    ├── index.js                # Main script file
+    ├── LICENSE.md
+    ├── package-lock.json
+    └── package.json
 
 ### Image processing task modifications
 
-### Scripts
+**TODO**
 
-### Alternatives
+### Build and compile
+
+**TODO**
 
 ### Dependencies
 
-### License
-The code in this project is released under the [MIT License](LICENSE).
+- [GitHub Actions Toolkit](https://github.com/actions/toolkit) -  The GitHub ToolKit for developing GitHub Actions.
+- [sharp](https://github.com/lovell/sharp) - High performance Node.js image processing.
+
+In addition, the following `devDependencies` are used for linting only: `eslint`, `eslint-config-airbnb-base`and `eslint-plugin-import`.
+
+### Alternatives
+
+- [node-thumbnail](https://www.npmjs.com/package/node-thumbnail)
+- [Image Resizer Action](https://github.com/marketplace/actions/image-resizer-action)
+
+Or keep your life simple and avoid the whole use-case with [Netlify Large Media](https://docs.netlify.com/large-media/transform-images/) or [Cloudinary](https://cloudinary.com).
 
 ### Contributions
 Any contributions welcome! [Open a new issue](https://github.com/subic/ghaction-thumbnails/issues/new) or submit a pull request.
+
+### License
+The code in this project is released under the [MIT License](LICENSE).
