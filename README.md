@@ -164,11 +164,11 @@ The code is (somewhat) commented and build as to allow easy automatization for a
 
 ### Image processing task modifications
 
-**TODO**
+The [images helper script](https://github.com/subic/ghaction-thumbnails/blob/master/helpers/images.js) will be called on each required source file with the provided options. See the script parameters for the values that are passed to each instance. The `resizeImage` export script can be customized for further processing using sharp or the sharp dependency can be replace entirely (eg. with node-imagemagick) by modifying this file.
 
 ### Build and compile
 
-**TODO**
+When forking for modification keep in mind the action calls the compiled version in the `dist` folder. You can generate it using [`zeit/ncc`](https://github.com/zeit/ncc) by running `npm run build:action` npm script. If you want to skip the compilation step on each change, you can point the action's `runs/main` parameter to `index.js` but you will have to commit the `node_modules` folder to your repository. For more information see [here](https://help.github.com/en/actions/creating-actions/creating-a-javascript-action#commit-tag-and-push-your-action-to-github). Also keep in mind that sharp uses platform dependant binaries so make sure the correct version for GitHub linux runner is installed (the provided npm script `npm run install:action` makes sure of it while also skipping the optional dev dependencies).
 
 ### Dependencies
 
