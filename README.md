@@ -9,7 +9,7 @@
 * [Development](#development)
     * [Repo structure](#repo-structure)
     * [Image processing task modifications](#image-processing-task-modifications)
-    * [Scripts](#scripts)
+    * [Build and compile](#build-and-compile)
     * [Dependencies](#dependencies)
     * [Alternatives](#alternatives)
     * [Contributions](#contributions)
@@ -94,7 +94,7 @@ If there are no breaking errors, the action only sets a workflow environment var
 
 #### Example `workflow.yml`
 
-Example commented workflow file with all optional arguments and example commit step using the output environment variable. It will trigger on any new or modified files added to the `/images`repository folder (set under `paths:`) and
+Example commented workflow file with all optional arguments and example commit step using the output environment variable. It will trigger on any new or modified files added to the `/images` repository folder (set under `paths:`) and
 
 ```yaml
 name: Generate thumbnails
@@ -175,7 +175,7 @@ The code is (somewhat) commented and build as to allow easy automatization for a
 - [GitHub Actions Toolkit](https://github.com/actions/toolkit) -  The GitHub ToolKit for developing GitHub Actions.
 - [sharp](https://github.com/lovell/sharp) - High performance Node.js image processing.
 
-In addition, the following `devDependencies` are used for linting only: `eslint`, `eslint-config-airbnb-base`and `eslint-plugin-import`.
+In addition, the following `devDependencies` are used for linting only: `eslint`, `eslint-config-airbnb-base` and `eslint-plugin-import`.
 
 ### Alternatives
 
