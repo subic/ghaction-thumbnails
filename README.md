@@ -1,6 +1,10 @@
 # Thumbnails Generator GitHub Action
 ### Automatically generate image thumbnails when images are added to the repository.
 
+<p align="center">
+  <svg width="96" height="96" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><circle fill="#1F242A" cx="48" cy="48" r="48"/><path d="M47.917 65.833c9.895 0 17.916-8.021 17.916-17.916S57.812 30 47.917 30 30 38.022 30 47.917c0 9.895 8.022 17.916 17.917 17.916zm4.138-25.083L62.34 58.56M43.778 40.75h20.568M39.64 47.917l10.284-17.81m-6.145 24.976L33.494 37.274m18.561 17.81H31.487m24.707-7.167L45.91 65.726" stroke="#FFF" stroke-width="3.583" stroke-linecap="round" stroke-linejoin="round"/></g></svg>
+</p>
+
 * [Usage](#usage)
     * [Inputs](#inputs)
     * [Outputs](#outputs)
