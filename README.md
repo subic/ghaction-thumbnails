@@ -56,7 +56,7 @@ Input images directory path (string) relative to the repository base. **Required
 Output thumbnails directory path (string) relative to the repository base. It is  **required** but the directory will be (recursively) created if not present. The argument will be output as a path string from the action to be used in further workflow jobs or steps. Default is `'thumbnails'`.
 
 #### `sizes`
-Output thumbnail dimensions (number, string or comma-delimited string of numbers or strings). Any number of sizes separated with a comma can be supplied but at least one is **required**. If the size is a number only, it will be treated as width; prefix it with an `x` to process it as height dimension. To set both output width and height dimensions, set width and height with the `x` separator eg. `1920x1080`. Default is `480`.
+Output thumbnail dimensions (number, string or comma-delimited string of numbers or strings). Any number of sizes separated with a comma can be supplied but at least one is **required**. If the size is a number only, it will be treated as width; prefix it with an `x` to process it as height dimension. To set both output width and height dimensions, pass width and height with the `x` separator eg. `1920x1080`. Default value is `480`.
 
 #### `subfolder`
 Subfolder (string) pattern for each width. Use `false` to output directly to the [`output`](#output) folder but note that any existing or generated files will not be overwritten by default. Pattern strings `%D`, `%W` and `%H` can be used to be replaced by the generated image dimension values where `%W` is image width in pixels, `%H` is image height in pixels and `%D` is width or height if width is not set.
@@ -94,7 +94,7 @@ If there are no breaking errors, the action only sets a workflow environment var
 
 #### Example `workflow.yml`
 
-Example commented workflow file with all optional arguments and example commit step using the output environment variable. It will trigger on any new or modified files added to the `/images` repository folder (set under `paths:`) and
+Example commented workflow file with all optional arguments and example commit step using the output environment variable. It will trigger on any new or modified files added to the `/images` repository folder (set under `paths:`) and generate (and commit) 480 px wide image thumbnails for new images in `thumbnails/480` repo folder.
 
 ```yaml
 name: Generate thumbnails
