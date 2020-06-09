@@ -56,10 +56,10 @@ Input images directory path (string) relative to the repository base. **Required
 Output thumbnails directory path (string) relative to the repository base. It is  **required** but the directory will be (recursively) created if not present. The argument will be output as a path string from the action to be used in further workflow jobs or steps. Default is `'thumbnails'`.
 
 #### `sizes`
-Output thumbnail dimensions (number, string or comma-delimited string of numbers or strings). Any number of sizes separated with a comma can be supplied but at least one is **required**. If the size is a number only it will be treated as width, prefix it with an `x` to process it as height dimension. To set both output width and height dimensions, set width and height with the `x` separator eg. `1920x1080`. Default is `480`.
+Output thumbnail dimensions (number, string or comma-delimited string of numbers or strings). Any number of sizes separated with a comma can be supplied but at least one is **required**. If the size is a number only, it will be treated as width; prefix it with an `x` to process it as height dimension. To set both output width and height dimensions, set width and height with the `x` separator eg. `1920x1080`. Default is `480`.
 
 #### `subfolder`
-Subfolder (string) pattern for each width. Use `false` to output directly to the [`output`](#output) folder but not that any existing or generated files will not be overwritten by default. Pattern strings `%D`, `%W` and `%H` can be used to be replaced by the generated image dimension values where `%W` is image width in pixels, `%H` is image height in pixels and `%D` is width or height if width is not set.
+Subfolder (string) pattern for each width. Use `false` to output directly to the [`output`](#output) folder but note that any existing or generated files will not be overwritten by default. Pattern strings `%D`, `%W` and `%H` can be used to be replaced by the generated image dimension values where `%W` is image width in pixels, `%H` is image height in pixels and `%D` is width or height if width is not set.
 >**Note**: Even when using `subfolder: false` source images can not and will never be overwritten. The action uses sharp's [toFile](https://sharp.pixelplumbing.com/api-output#tofile) output option which means the source and destination file can not match. If that is a requirement image processing task can be [modified or replaced completely](#image-processing-task-modifications) to eg. use sharp streams or imagemagick or review some of the [alternatives](#alternatives).
 
 #### `filename`
@@ -137,18 +137,17 @@ jobs:
 
 #### Example repository
 
-An example repository with the workflow file usage example is [available here](https://github.com/subic/ghaction-thumbnails-example). You can fork it and after pushing an image to the `images` folder on GitHub, example thumbnails will be generated in the `output` folder. A comparison `test` folder is also available which will run the action and its[alternatives](#alternatives) for comparison.
+An example repository with the workflow file usage example is [available here](https://github.com/subic/ghaction-thumbnails-example). You can fork it and after pushing an image to the `images` folder on GitHub, example thumbnails will be generated in the `output` folder. A comparison `test` folder is also available which will run the action and its [alternatives](#alternatives) for comparison.
 
 ### Notes
 
-The action was developed as a way to prevent excess thumbnail generation when using a build tool for a static website. When using "git as a cms" with tools such as [netlifycms](https://www.netlifycms.org/) or GitHub pages, any files generated as part of the build process are not committed to the source repository and therefore needlessly regenerated on each full build.
+The action was developed as a way to prevent excess thumbnail generation when using a build tool for a static website - when using "git as a cms" with tools such as [netlifycms](https://www.netlifycms.org/) or GitHub pages, any files generated as part of the build process are not committed to the source repository and therefore needlessly regenerated on each full build.
 
 ## Development
 
-The code is (somewhat) commented and build as to allow easy automatization for any thumbnail generation need. The actual image processing task is hot-pluggable to allow replacement of sharp output or even sharp itself.
+The code is (somewhat) commented and built as to allow easy automatization for any thumbnail generation need. The actual image processing task is hot-pluggable to allow replacement of sharp output, script or even sharp itself.
 
 ### Repo structure
-
     .
     ├── dist                    # Compiled main script code with modules (for GH linux)
     ├── helpers                 # Helper functions folder
