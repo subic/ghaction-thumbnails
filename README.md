@@ -18,7 +18,7 @@
 
 ## Usage
 
-To add the thumbnail generator to your GitHub Actions pipeline, specify the name of this repository, optionally with a tag number (`@v1` is the current version) as a `step` within your `workflow.yml` file.
+To add the thumbnail generator to your GitHub Actions pipeline, specify the name of this repository, optionally with a tag number (`@v1.1` is the current version) as a `step` within your `workflow.yml` file.
 
 Inside your `.github/workflows/workflow.yml` file:
 
@@ -128,7 +128,7 @@ jobs:
         uses: actions/checkout@master
       - name: Process Images
         id: images
-        uses: subic/ghaction-thumbnails@v1 # Tag number optional, breaking changes not expected.
+        uses: subic/ghaction-thumbnails@v1.1 # Tag number optional, breaking changes not expected.
         with: # Arguments:
           source: 'images' # REQUIRED
           output: 'thumbnails' # REQUIRED
