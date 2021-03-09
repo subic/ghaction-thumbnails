@@ -1,13 +1,34 @@
 /**
-* @file Input validation and replacement scripts
-* @module helpers/inputs
-*/
-const { isFolder } = require('./folders.js');
+ * @file Input validation and replacement scripts
+ * @module helpers/inputs
+ */
+const {isFolder} = require('./folders.js');
 
 // Valid option values
 const VALID_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'tiff', 'svg'];
 const VALID_FITS = ['cover', 'contain', 'fill', 'inside', 'outside'];
-const VALID_POSITIONS = ['top', 'right top', 'right', 'right bottom', 'bottom', 'left bottom', 'left', 'left top', 'north', 'northeast', 'east', 'southeast', 'south', 'southwest', 'west', 'northwest', 'center', 'centre', 'entropy', 'attention'];
+const VALID_POSITIONS = [
+  'top',
+  'right top',
+  'right',
+  'right bottom',
+  'bottom',
+  'left bottom',
+  'left',
+  'left top',
+  'north',
+  'northeast',
+  'east',
+  'southeast',
+  'south',
+  'southwest',
+  'west',
+  'northwest',
+  'center',
+  'centre',
+  'entropy',
+  'attention',
+];
 
 /**
  * Checks if fit matches valid fit values constant.
@@ -29,8 +50,9 @@ const isValidFit = (fit) => VALID_FITS.includes(fit);
  * @returns {boolean} Returns true if any position matches for valid fit.
  */
 function isValidPosition(position, fit) {
-  if (fit !== ('cover' || 'contain')) return false;
-  if ((position === ('entropy' || 'attention') && fit !== 'cover')) return false;
+  if (fit !== 'cover' && fit !== 'contain') return false;
+  if ((position === 'entropy' || position === 'attention') && fit !== 'cover')
+    return false;
   return VALID_POSITIONS.includes(position);
 }
 
@@ -42,7 +64,8 @@ function isValidPosition(position, fit) {
  *
  * @returns {boolean} Returns true if any valid extension matches.
  */
-const isValidExtension = (extension) => VALID_EXTENSIONS.includes(extension.trim());
+const isValidExtension = (extension) =>
+  VALID_EXTENSIONS.includes(extension.trim());
 
 /**
  * Validates input options.
@@ -60,9 +83,13 @@ function validateOptions(fit, position, enlarge = true) {
   // Confirm fit value is valid.
   if (isValidFit(fit)) validOptions.fit = fit;
   // Confirm position value is valid for fit.
-  if (isValidPosition(position, validOptions.fit)) validOptions.position = position;
+  if (isValidPosition(position, validOptions.fit)) {
+    validOptions.position = position;
+  }
   // Prevent enlargement if requested.
-  if (!enlarge || enlarge === 'false') validOptions.withoutEnlargement = true;
+  if (!enlarge || enlarge === 'false') {
+    validOptions.withoutEnlargement = true;
+  }
   return validOptions;
 }
 
@@ -109,7 +136,8 @@ function validateDimensions(_sizes) {
     }
   });
 
-  if (!validDimensions.length) { // Error out if no valid dimensions found.
+  if (!validDimensions.length) {
+    // Error out if no valid dimensions found.
     throw new Error(`No valid sizes in input argument: ${_sizes}!`);
   }
   return validDimensions;
@@ -131,7 +159,7 @@ function validateSizes(sizes, fit, position, enlarge) {
   const options = validateOptions(fit, position, enlarge);
   const dimensions = validateDimensions(sizes);
 
-  return dimensions.map((dimension) => ({ ...dimension, ...options }));
+  return dimensions.map((dimension) => ({...dimension, ...options}));
 }
 
 /**
@@ -143,11 +171,19 @@ function validateSizes(sizes, fit, position, enlarge) {
  * @throws {Error} Invalid image extension in input.
  */
 function validateExtensions(extensions) {
-  let validExtensions = extensions.includes(',') ? extensions.split(',') : extensions;
-  validExtensions = Array.isArray(validExtensions) ? validExtensions : [validExtensions];
-  validExtensions = validExtensions.map((extension) => extension.split('.').join('').trim());
+  let validExtensions = extensions.includes(',')
+    ? extensions.split(',')
+    : extensions;
+  validExtensions = Array.isArray(validExtensions)
+    ? validExtensions
+    : [validExtensions];
+  validExtensions = validExtensions.map((extension) =>
+    extension.split('.').join('').trim()
+  );
   if (!validExtensions.every(isValidExtension)) {
-    throw new Error(`${extensions} includes an invalid image extension, valid values: ${VALID_EXTENSIONS}`);
+    throw new Error(
+      `${extensions} includes an invalid image extension, valid values: ${VALID_EXTENSIONS}`
+    );
   }
   return validExtensions;
 }
@@ -162,7 +198,8 @@ function validateExtensions(extensions) {
  * @throws {Error} Input source path folder doesn't exist.
  */
 async function validateFolder(path) {
-  if (await isFolder(path)) { // Confirm input folder exists.
+  if (await isFolder(path)) {
+    // Confirm input folder exists.
     return path;
   }
   throw new Error(`Input folder '${path}' doesn't exist!`);
@@ -178,10 +215,14 @@ async function validateFolder(path) {
  * @returns {string} String with expanded variable values.
  */
 function expandVariables(pattern, dimensions, filename = '') {
-  const { height, width } = dimensions;
+  const {height, width} = dimensions;
   const [basename, extension] = filename.split('.');
 
-  return pattern.split('%W').join(width || '').split('%H').join(height || '')
+  return pattern
+    .split('%W')
+    .join(width || '')
+    .split('%H')
+    .join(height || '')
     .split('%D')
     .join(width || height || '')
     .split('%N')

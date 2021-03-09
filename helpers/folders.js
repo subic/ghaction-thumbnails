@@ -1,8 +1,8 @@
 /**
-* @file Helper functions for node fs folder handling with promises.
-* @module helpers/folders
-*/
-const { lstat, opendir, mkdir } = require('fs').promises;
+ * @file Helper functions for node fs folder handling with promises.
+ * @module helpers/folders
+ */
+const {lstat, opendir, mkdir} = require('fs').promises;
 
 /**
  * Checks if filename matches extension.
@@ -15,8 +15,7 @@ const { lstat, opendir, mkdir } = require('fs').promises;
  */
 function hasExtension(file, extension) {
   const filename = file.toString().toLowerCase();
-  const suffix = extension.toString().trim().toLowerCase().split('.')
-    .join('');
+  const suffix = extension.toString().trim().toLowerCase().split('.').join('');
   return filename.endsWith(`.${suffix}`);
 }
 
@@ -55,7 +54,10 @@ async function getFiles(folder, extensions = []) {
     if (!dirent.isDirectory()) {
       const filename = dirent.name;
       // If passed any extensions return only matching filenames.
-      if (!extensions.length || extensions.some((extension) => hasExtension(filename, extension))) {
+      if (
+        !extensions.length ||
+        extensions.some((extension) => hasExtension(filename, extension))
+      ) {
         files.push(filename);
       }
     }
@@ -72,7 +74,7 @@ async function getFiles(folder, extensions = []) {
  * @returns {Promise} fs.mkdir promise object.
  */
 async function createFolder(path) {
-  await mkdir(path, { recursive: true });
+  await mkdir(path, {recursive: true});
 }
 
 exports.isFolder = isFolder;

@@ -1,6 +1,6 @@
 {
   "name": "ghaction-thumbnails",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "GitHub action that generates thumbnails from an existing repository image folder",
   "main": "index.js",
   "scripts": {
@@ -11,12 +11,12 @@
   "license": "MIT",
   "dependencies": {
     "@actions/core": "1.2.6",
-    "sharp": "0.25.3"
+    "sharp": "0.27.2"
   },
   "devDependencies": {
-    "eslint": "^7.0.0",
-    "eslint-config-airbnb-base": "^14.1.0",
-    "eslint-plugin-import": "^2.20.2"
+    "eslint": "latest",
+    "eslint-config-airbnb-base": "latest",
+    "eslint-config-prettier": "latest"
   },
   "eslintConfig": {
     "env": {
@@ -24,7 +24,8 @@
       "node": true
     },
     "extends": [
-      "airbnb-base"
+      "airbnb-base",
+      "prettier"
     ],
     "rules": {
       "no-console": "off"

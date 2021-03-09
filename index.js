@@ -1,11 +1,14 @@
 /**
-* @file Main action script with helper imports.
-*/
+ * @file Main action script with helper imports.
+ */
 const core = require('@actions/core'); // https://github.com/actions/toolkit
 const {
-  validateExtensions, validateSizes, validateFolder, expand,
+  validateExtensions,
+  validateSizes,
+  validateFolder,
+  expand,
 } = require('./helpers/inputs.js');
-const { isFolder, getFiles, createFolder } = require('./helpers/folders.js');
+const {isFolder, getFiles, createFolder} = require('./helpers/folders.js');
 const resizeImage = require('./helpers/images.js');
 
 /**
@@ -27,38 +30,60 @@ const resizeImage = require('./helpers/images.js');
  * @returns {Promise} Promise object object of all image processing task promises.
  */
 async function generateThumbnails(
-  _source, _output, _sizes, _extensions, _subfolder, _filename, _fit,
-  _position, _enlarge, _overwrite,
+  _source,
+  _output,
+  _sizes,
+  _extensions,
+  _subfolder,
+  _filename,
+  _fit,
+  _position,
+  _enlarge,
+  _overwrite
 ) {
   // Validate inputs.
   const source = await validateFolder(_source);
-  const overwrite = (_overwrite === (true || 'true' || 'TRUE'));
+  const overwrite =
+    _overwrite === true || _overwrite.toString().toLowerCase() === 'true';
   const extensions = validateExtensions(_extensions);
   const sizes = validateSizes(_sizes, _fit, _position, _enlarge);
   const tasks = []; // Output array.
 
   // Create image resize tasks for each requited thumbnail size.
-  await Promise.all(sizes.map(async (options) => {
-    // Helper scripts
-    const filename = (file) => expand(_filename, options, file);
-    const getImages = async (folder) => getFiles(folder, extensions);
-    // Output variables for processing script.
-    const output = _subfolder === (false || 'false') ? _output : `${_output}/${expand(_subfolder, options)}`;
-    let images = await getImages(source);
+  await Promise.all(
+    sizes.map(async (options) => {
+      // Helper scripts
+      const filename = (file) => expand(_filename, options, file);
+      const getImages = async (folder) => getFiles(folder, extensions);
+      // Output variables for processing script.
+      const output =
+        _subfolder === false || _subfolder.toString().toLowerCase() === 'false'
+          ? _output
+          : `${_output}/${expand(_subfolder, options)}`;
+      let images = await getImages(source);
 
-    // If output folder doesn't exist, create it recursively.
-    if (!(await isFolder(output))) {
-      await createFolder(output);
-    // Ignore existing images if not called with overwrite option.
-    } else if (!overwrite) {
-      const thumbnails = await getImages(output);
-      images = images.filter((image) => thumbnails.indexOf(filename(image)) === -1);
-    }
-    // Push image resize task to output array.
-    images.forEach((image) => tasks.push(
-      resizeImage(`${source}/${image}`, options, `${output}/${filename(image)}`),
-    ));
-  }));
+      // If output folder doesn't exist, create it recursively.
+      if (!(await isFolder(output))) {
+        await createFolder(output);
+        // Ignore existing images if not called with overwrite option.
+      } else if (!overwrite) {
+        const thumbnails = await getImages(output);
+        images = images.filter(
+          (image) => thumbnails.indexOf(filename(image)) === -1
+        );
+      }
+      // Push image resize task to output array.
+      images.forEach((image) =>
+        tasks.push(
+          resizeImage(
+            `${source}/${image}`,
+            options,
+            `${output}/${filename(image)}`
+          )
+        )
+      );
+    })
+  );
 
   return Promise.all(tasks); // Promise all resizeImage tasks.
 }
@@ -84,7 +109,7 @@ generateThumbnails(
   // north, northeast, east, southeast, south, southwest, west, northwest, center,
   // centre (default), entropy (fit: cover only), attention (fit: cover only)
   core.getInput('enlarge') || true, // Enlarge smaller images to thumbnail dimensions.
-  core.getInput('overwrite'), // Overwrite existing thumbnails (default: false).
+  core.getInput('overwrite') // Overwrite existing thumbnails (default: false).
 ).catch((error) => core.setFailed(` ${error.message}`)); // Any error should fail action.
 
 // Export the thumbnails container folder to be used as env variable (eg. for commits)

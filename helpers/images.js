@@ -1,7 +1,7 @@
 /**
-* @file Image processing task for main script, uses sharp.
-* @module helpers/images
-*/
+ * @file Image processing task for main script, uses sharp.
+ * @module helpers/images
+ */
 const sharp = require('sharp'); // https://github.com/lovell/sharp
 
 /**
@@ -18,10 +18,11 @@ const sharp = require('sharp'); // https://github.com/lovell/sharp
  *
  * @returns {Promise} Sharp promise object, will log success to console.
  */
-const resizeImage = (input, options, output) => sharp(input)
-  .resize(options)
-  .jpeg({ quality: 80, progressive: true, force: false })
-  .toFile(output)
-  .then(() => console.log(`Processed thumbnail ${output}`));
+const resizeImage = (input, options, output) =>
+  sharp(input)
+    .resize(options)
+    .jpeg({quality: 80, progressive: true, force: false})
+    .toFile(output)
+    .then(() => console.log(`Processed thumbnail ${output}`));
 
 module.exports = resizeImage;
