@@ -1,10 +1,10 @@
 {
   "name": "ghaction-thumbnails",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "GitHub action that generates thumbnails from an existing repository image folder",
   "main": "index.js",
   "scripts": {
-    "build:action": "npx @zeit/ncc build index.js",
+    "build:action": "npx @vercel/ncc build index.js",
     "install:action": "npm i --only=production --arch=x64 --platform=linux"
   },
   "author": "https://github.com/subic",
