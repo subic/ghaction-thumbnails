@@ -1,6 +1,6 @@
 {
   "name": "ghaction-thumbnails",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "GitHub action that generates thumbnails from an existing repository image folder",
   "main": "index.js",
   "scripts": {

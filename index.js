@@ -113,4 +113,4 @@ generateThumbnails(
 ).catch((error) => core.setFailed(` ${error.message}`)); // Any error should fail action.
 
 // Export the thumbnails container folder to be used as env variable (eg. for commits)
-core.exportVariable('thumbnails', core.getInput('output'));
+core.setOutput('thumbnails', core.getInput('output'));

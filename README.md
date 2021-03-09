@@ -102,7 +102,7 @@ A (string) parameter wether to overwrite any existing files in the [`output` fol
 
 ### Outputs
 
-If there are no breaking errors, the action only sets a workflow environment variable: `thumbnails` which is the repository relative path string for the container [`output` images folder](#output). It can be used in any further image actions or passed to a commit repository action.
+If there are no breaking errors, the action only sets a single output: `thumbnails` which is the repository relative path string for the container [`output` images folder](#output). It can be used in any further image actions or passed to a commit repository action.
 
 ### Example usage
 
@@ -127,6 +127,7 @@ jobs:
       - name: Checkout repository # Check out the repo to access the input image folder.
         uses: actions/checkout@master
       - name: Process Images
+        id: images
         uses: subic/ghaction-thumbnails@v1 # Tag number optional, breaking changes not expected.
         with: # Arguments:
           source: 'images' # REQUIRED
@@ -141,10 +142,10 @@ jobs:
           overwrite: 'false'
       - name: Commit thumbnail folder # This step will commit generated files, remove if not used as a single purpose workflow. Will exit gracefully if no changes are found.
         run: |
-          echo "Committing folder ${{env.thumbnails}}"
+          echo "Committing folder ${{steps.images.outputs.thumbnails}}"
           git config --local user.name "${{github.actor}}"
           git config --local user.email "${{github.actor}}@users.noreply.github.com"
-          git add ./${{env.thumbnails}} || exit 0
+          git add ./${{steps.images.outputs.thumbnails}}" || exit 0
           git commit -m "[skip ci] Auto-generated missing thumbnails" -a || exit 0
           git push -f -q https://${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}
 ```
