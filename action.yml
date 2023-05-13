@@ -16,7 +16,7 @@ inputs:
   sizes:
     description: 'Thumbnail sizes'
     required: true
-    default: 480
+    default: '480'
   subfolder:
     description: 'Thumbnails subfolder pattern'
     required: false
@@ -39,14 +39,14 @@ inputs:
   enlarge:
     description: 'Enlarge smaller images to thumbnail dimensions'
     required: false
-    default: true
+    default: 'true'
   overwrite:
     description: 'Overwrite existing images'
     required: false
-    default: false
+    default: 'false'
 outputs:
   thumbnails:
     description: 'Processed thumbnails folder'
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'
