@@ -11,7 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "@actions/core": "1.10.0",
-    "sharp": "0.32.1"
+    "sharp": "0.32.6"
   },
   "devDependencies": {
     "eslint": "latest",
